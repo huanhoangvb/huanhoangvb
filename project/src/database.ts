@@ -6,11 +6,11 @@ const database = 'maindb'
 const password = '1242001Huan'
 const port = '5432'
 
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
     database: database,
     dialect: 'postgres',
     username: user,
     password: password,
     storage: ':memory:',
-    models: ['student','class'] 
+    models: [__dirname+'student','class'] 
   })
