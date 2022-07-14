@@ -1,12 +1,25 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, NotEmpty } from 'sequelize-typescript'
 
-@Table({timestamps: true})
-class student extends Model {
-  @Column(DataType.UUID)
-  id!: String
 
-  @Column
-  name!: String
+export interface studentInterface {
+  id?: number | null
+  name: string
 }
 
-module.exports(student);
+@Table({
+  tableName: "Student",
+  timestamps: true
+})
+
+
+export default class student extends Model implements studentInterface{
+
+  @PrimaryKey
+  @Column({type: DataType.UUID})
+  id?: number
+
+  @AllowNull(false)
+  @NotEmpty
+  @Column({type: DataType.STRING})
+  name!:  string
+}
