@@ -21,6 +21,8 @@
   "dependencies": {
     "@graphql-yoga/node": "2.13.1",
     "graphql": "^16.5.0",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.21.3",
     "sequelize-typescript": "^2.1.3"

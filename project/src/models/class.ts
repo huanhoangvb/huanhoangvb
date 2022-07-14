@@ -1,17 +1,10 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:');
+import { Table, Column, Model, DataType } from 'sequelize-typescript'
 
-export const Class = sequelize.define('Class', {
-  // Model attributes are defined here
-  id: {
-    type: DataTypes.UUID,
-    allowNull: false
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  }
-});
+@Table({timestamps: true})
+class Class extends Model {
+  @Column(DataType.UUID)
+  id!: String
 
-// `sequelize.define` also returns the model
-console.log(Class === sequelize.models.Class); // true
+  @Column
+  name!: String
+}
