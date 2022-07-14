@@ -1,7 +1,7 @@
 import { Table, Column, Model, DataType, PrimaryKey, AllowNull, NotEmpty } from 'sequelize-typescript'
 
 
-export interface studentInterface {
+interface studentInterface {
   id?: number | null
   name: string
 }
@@ -12,11 +12,11 @@ export interface studentInterface {
 })
 
 
-export default class student extends Model implements studentInterface{
+export default class student extends Model<student> implements studentInterface{
 
   @PrimaryKey
   @Column({type: DataType.UUID})
-  id?: number
+  id?: number | null
 
   @AllowNull(false)
   @NotEmpty

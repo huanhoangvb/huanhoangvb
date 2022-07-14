@@ -6,16 +6,14 @@ async function main() {
   const server = createServer({ schema })
   await server.start()
 
-  try{
-    await sequelize.sync({force: true}) 
-  }catch(error)
-  {console.log(Error)}
-
-  sequelize.authenticate().then(()=>{
-    console.log("Database Connected")
-  }).catch( (e: any) => {
-    console.log(e.log)
+  sequelize
+  .authenticate()
+  .then(function(err) {
+    console.log('Connection has been established successfully.');
   })
+  .catch(function (err) {
+    console.log('Unable to connect to the database:', err);
+  });
 }
 
 main()
