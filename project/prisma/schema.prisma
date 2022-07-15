@@ -11,7 +11,7 @@ datasource db {
 }
 
 model student {
-  id          Int      @id 
+  id          String   @id @default(autoincrement())
   createdAt   DateTime @default(now())
   name        String   
 

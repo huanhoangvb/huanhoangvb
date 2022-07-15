@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "student" (
-    "id" INTEGER NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "name" TEXT NOT NULL,
 

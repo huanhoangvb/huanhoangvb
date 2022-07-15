@@ -1,25 +1,17 @@
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, NotEmpty } from 'sequelize-typescript'
+import  { Sequelize, Model, DataTypes, UUIDV4 } from 'sequelize';
 
+const sequelize = new Sequelize('sqlite::memory:');
+export const Student = sequelize.define('Student', {
+  id:
+  {
+    type: DataTypes.UUID,
+    defaultValue: UUIDV4,
+    allowNull: false,
+    primaryKey: true,
+  } ,
+  name: {
+    type: DataTypes.STRING
+  }
+});
 
-interface studentInterface {
-  id?: null | number
-  name: string
-}
-
-@Table({
-  tableName: "Student",
-  timestamps: true
-})
-
-
-export default class student extends Model<student> implements studentInterface{
-
-  @PrimaryKey
-  @Column({type: DataType.UUID})
-  id?: null | undefined | number
-
-  @AllowNull(false)
-  @NotEmpty
-  @Column({type: DataType.STRING})
-  name!:  string
-}
+export default Student;
