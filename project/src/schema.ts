@@ -1,4 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
+import database from './database';
 
 const typeDefinitions = /* GraphQL */ `
 type Query {
@@ -13,7 +14,18 @@ type Link {
 }
 
 type Mutation {
-  postLink(url: String!, description: String!): Link!
+  postLink(url: String!, description: String!): Link!,
+  addStudent(data: addStudentInput): Student!
+}
+
+input addStudentInput{
+  id: String!
+  name: String!
+}
+
+type Student{
+  id: String!
+  name: String!
 }
 `
 // 1
@@ -66,6 +78,7 @@ const resolvers = {
 
       return link
     },
+
   },
 }
 

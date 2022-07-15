@@ -2,7 +2,7 @@ import { Table, Column, Model, DataType, PrimaryKey, AllowNull, NotEmpty } from 
 
 
 interface studentInterface {
-  id?: number | null
+  id?: null | number
   name: string
 }
 
@@ -16,7 +16,7 @@ export default class student extends Model<student> implements studentInterface{
 
   @PrimaryKey
   @Column({type: DataType.UUID})
-  id?: number | null
+  id?: null | undefined | number
 
   @AllowNull(false)
   @NotEmpty

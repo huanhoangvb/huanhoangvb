@@ -14,3 +14,5 @@ export const sequelize = new Sequelize({
     storage: ':memory:',
     models: [__dirname+'student','class'] 
   })
+
+export default sequelize;
