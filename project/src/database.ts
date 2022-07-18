@@ -1,4 +1,6 @@
 import { Sequelize } from 'sequelize-typescript'
+import Student from './models/student'
+import Class from './models/class'
 
 const user = 'postgres'
 const host = 'localhost'
@@ -10,9 +12,9 @@ export const sequelize = new Sequelize(database, user, password, {
   host: host,
   dialect: 'postgres',
   port: port,
-  models: [__dirname+'./models'+'class','student']
+  models: [Student,Class]
 });
 
-console.log(__dirname+'')
+console.log(__dirname)
 
 export default sequelize;
