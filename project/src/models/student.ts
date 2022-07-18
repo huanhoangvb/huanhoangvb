@@ -1,14 +1,19 @@
-import { Table, Column, Model, HasMany, Sequelize, AllowNull, PrimaryKey } from 'sequelize-typescript'
+import { Table, Column, Model, HasMany, Sequelize, AllowNull, PrimaryKey, NotEmpty } from 'sequelize-typescript'
 import { DataType } from 'sequelize-typescript';
 
-@Table
-class Student extends Model<Student> {
+@Table({tableName: 'Student', freezeTableName: true})
+export class Student extends Model{
   @PrimaryKey
-  @Column({})
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+  })
   id?: string
 
-  @Column({})
-  name:  string
+  @AllowNull(false)
+  @NotEmpty
+  @Column({type: DataType.TEXT, allowNull: false})
+  name!:  string
 }
 
 export default Student;

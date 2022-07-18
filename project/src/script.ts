@@ -2,16 +2,21 @@
 import { PrismaClient } from '@prisma/client'
 import Student from './models/student';
 import sequelize from './database';
+import Class from './models/class';
 
 // 2
 const prisma = new PrismaClient()
 
 // 3
 async function main() {
-  const newStudent1 = new Student({});
-  const newStudent = await Student.create({});
-  await newStudent.save() 
-  console.log(newStudent.id, newStudent.name);
+  sequelize
+  .authenticate()
+  .then(function(err) {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(function (err) {
+    console.log('Unable to connect to the database:', err);
+  });
 }
 // 4
 main()
