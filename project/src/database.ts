@@ -12,9 +12,8 @@ export const sequelize = new Sequelize(database, user, password, {
   host: host,
   dialect: 'postgres',
   port: port,
+  storage: ':memory:',
   models: [Student,Class]
 });
-
-console.log(__dirname)
 
 export default sequelize;
