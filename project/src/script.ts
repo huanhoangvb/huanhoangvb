@@ -8,7 +8,8 @@ const prisma = new PrismaClient()
 
 // 3
 async function main() {
-  const newStudent = await Student.create({name: "Hoa"});
+  const newStudent1 = new Student({});
+  const newStudent = await Student.create({});
   await newStudent.save() 
   console.log(newStudent.id, newStudent.name);
 }
