@@ -1,5 +1,6 @@
-
+import { JsonWebTokenError, Jwt } from "jsonwebtoken"
 import Student from "../models/student"
+import { env } from "process"
 
 const registerNewStudent = async (parent: any, args: any) => {
     const newStudent = await Student.create({name: args.name})
@@ -8,11 +9,12 @@ const registerNewStudent = async (parent: any, args: any) => {
 
 }
 
-const searchStudentWithName = async (parent: any, args: any) => {
+const signinStudentWithName = async (parent: any, args: any) => {
     const name = args
     const foundStudent = Student.findOne({where: {name}})
     
     console.log('You are accessing student '+name+' with id')
+    return env.TZ
 }
 
 const enrollStudentIntoClass = async (parent: any, args: any) => {
@@ -43,10 +45,21 @@ const deleteStudentWithName = async (parent: any, args: any) => {
         console.log('You have successfully deleted student '+name+' with id ')
     }
 }
+
+const getAllStudentName =  async (parent:any, args:any) => {
+    try { 
+        const studentFound = await Student.findAll()
+        return studentFound
+    } catch (err:any) {
+        console.log(err);
+    } 
+}
+
 export{
     registerNewStudent,
-    searchStudentWithName,
+    signinStudentWithName,
     changeNameOfStudentWithName,
     deleteStudentWithName,
     enrollStudentIntoClass,
+    getAllStudentName
 }

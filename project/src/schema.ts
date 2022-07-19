@@ -1,84 +1,51 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import database from './database';
+import { registerNewStudent, getAllStudentName,signinStudentWithName, changeNameOfStudentWithName, deleteStudentWithName, enrollStudentIntoClass} from './resolver/studentService'
+import { registerNewClass, getAllClassName, searchClassWithName, changeNameOfClassWithName, deleteClassWithName } from './resolver/classService'
 
 const typeDefinitions = /* GraphQL */ `
 type Query {
-  info: String!
-  feed: [Link!]!
-}
 
-type Link {
-  id: ID!
-  description: String!
-  url: String!
 }
 
 type Mutation {
-  postLink(url: String!, description: String!): Link!,
-  addStudent(data: addStudentInput): Student!
+  registerNewStudent(name:String): Student
+  signinStudentWithName(name:String): Student
+  changeNameOfStudentWithName(name:String, newName:String): Student
+  deleteStudentWithName(name:String): Student
+  enrollStudentIntoClass(name:String, class:String): Student
+
+  registerNewClass(name:String): Class
+  searchClassWithName(name:String): Class
+  changeNameOfClassWithName(name:String, newName:String): Class
+  deleteClassWithName(name:String): Class
 }
 
-input addStudentInput{
-  id: String!
-  name: String!
+type Class{
+  id: String
+  name: String
 }
 
 type Student{
-  id: String!
-  name: String!
+  id: String
+  name: String
 }
 `
-// 1
-type Link = {
-  id: string
-  url: string
-  description: string
-}
-
-// 2
-const links: Link[] = [
-  {
-    id: 'link-0',
-    url: 'https://graphql-yoga.com',
-    description: 'The easiest way of setting up a GraphQL server',
-  },
-  {
-    id: 'link-1',
-    url: 'https://graphql.com',
-    description: 'BOOOHOOO',
-  },
-]
 
 const resolvers = {
   Query: {
-    info: () => `This is the API of a Hackernews Clone`,
-    // 3
-    feed: () => links,
-  },
-  // 4
-  Link: {
-    id: (parent: Link) => parent.id,
-    description: (parent: Link) => parent.description,
-    url: (parent: Link) => parent.url,
+    class: () => getAllClassName,
+    students: () => getAllStudentName,
   },
   Mutation:{
-    postLink: (parent: unknown, args: {description: string, url: string}) =>
-    {
-      // 1
-      let idCount = links.length
-
-      // 2
-      const link: Link = {
-        id: `link-${idCount}`,
-        description: args.description,
-        url: args.url,
-      }
-
-      links.push(link)
-
-      return link
-    },
-
+    createNewStudent: registerNewStudent,
+    loginStudent: signinStudentWithName,
+    changeStudentWithName: changeNameOfStudentWithName,
+    deleteStudent: deleteStudentWithName,
+    createNewClass: registerNewClass,
+    searchClas: searchClassWithName,
+    changeClassName: changeNameOfClassWithName,
+    deleteClass: deleteClassWithName,
+    enrollClass: enrollStudentIntoClass,
   },
 }
 

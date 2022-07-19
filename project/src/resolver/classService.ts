@@ -40,9 +40,20 @@ const deleteClassWithName = async (parent: any, args: any) => {
     }
 }
 
+const getAllClassName =  async (parent:any, args:any) => {
+    try { 
+        const classsFound = await Class.findAll()
+        return classsFound
+    } catch (err:any) {
+        console.log(err);
+    } 
+}
+
+
 export{
     registerNewClass,
     searchClassWithName,
     changeNameOfClassWithName,
-    deleteClassWithName
+    deleteClassWithName,
+    getAllClassName
 }
