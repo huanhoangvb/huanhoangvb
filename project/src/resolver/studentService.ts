@@ -1,49 +1,96 @@
-import { JsonWebTokenError, Jwt } from "jsonwebtoken"
+import Enrolment from "../models/enrolment"
 import Student from "../models/student"
-import { env } from "process"
+import {comparePassword,createToken} from "../models/student"
 
 const registerNewStudent = async (parent: any, args: any) => {
     const newStudent = await Student.create({name: args.name})
     await newStudent.save() 
-    console.log('Student '+args.name +' has been successfully registered');
-
+    console.log('Student '+newStudent.name +' has been successfully registered with id '+ newStudent.id);
+    
+    const accessToken = createToken(newStudent)   
+    return {
+        id: newStudent.id,
+        name: newStudent.name,
+        accessToken,
+    }
 }
 
 const signinStudentWithName = async (parent: any, args: any) => {
-    const name = args
-    const foundStudent = Student.findOne({where: {name}})
+    const {name , password} = args
+    const foundStudent = await Student.findOne({where: {name,password}})
     
-    console.log('You are accessing student '+name+' with id')
-    return env.TZ
+    if(foundStudent == null){
+        return console.log("Username is incorrect, please try again")
+    }
+    const passwordAuth = await comparePassword(password, foundStudent)
+    if (!passwordAuth)
+        return console.log("Wrong password, please try again")
+
+    const accessToken = createToken(foundStudent)
+    return {
+        id :foundStudent.id,
+        name: foundStudent.name,
+        accessToken,
+    }
+}
+
+const findStudentWithName = async (parent: any, args: any) => {
+    const {name} = args
+    const foundStudent = await Student.findOne({ where: { name: name } })
+    
+    if(!foundStudent){
+        return console.log("That student doenst exists")
+    }
+    
+    return console.log("The student you search is "+foundStudent.name+" with id "+ foundStudent.id)
+
 }
 
 const enrollStudentIntoClass = async (parent: any, args: any) => {
+    const {studentId, classId} = args
 
+    if(!classId)
+        return console.log("Please provide class id!")
+    
+    if(!studentId)
+        return console.log("Please provide student id!")
+
+    const enrolment = await Enrolment.create({
+        student_id: studentId,
+        class_id: classId
+    })
+
+    enrolment.save()
+        return console.log("Student with id "+ studentId+ " has successfully enrolled in class "+ classId)
 }
 
-const changeNameOfStudentWithName = async (parent: any, args: any) => {
-    const {currentName, newName} = args
-    const foundStudent = Student.findOne({where: {currentName}})
-    
-    console.log('You are accessing student '+foundStudent+' with id')
+const changePasswordOfStudentWithName = async (parent: any, args: any) => {
+    const {name, currentPassword, newPassword} = args
+    const foundStudent = await Student.findOne({where: {name: name}})
 
-    Student.update(
-        {
-          name: newName
-        },
-        { where: { currentName } }
-      ).then(() => {})
+    if (foundStudent == null)
+        return console.log("The name of the student "+ name+ " doesnt exist, please try again")
+    const passwordAuth = await comparePassword(currentPassword, foundStudent)
+    if(!passwordAuth)
+        return console.log("The password is wrong, please try again")
+
+    console.log('You are now changing student '+foundStudent.name+' with id '+ foundStudent.id +' password!')
+
+    foundStudent.update({password: newPassword})
+
+    return {
+        id: foundStudent.id,
+        name: foundStudent.name,
+    }
 }
 
 const deleteStudentWithName = async (parent: any, args: any) => {
     const name = args
     const studentToBeDeleted = await Student.destroy({ where: { name: name}})
-    if (!studentToBeDeleted){
-        console.log('The student you search doesnt exist, please try again!')
-    }
-    else{
-        console.log('You have successfully deleted student '+name+' with id ')
-    }
+    if (!studentToBeDeleted)
+        return console.log('The student you search doesnt exist, please try again!')
+    console.log('You have successfully deleted student '+name+' with id ')
+    return studentToBeDeleted
 }
 
 const getAllStudentName =  async (parent:any, args:any) => {
@@ -58,8 +105,9 @@ const getAllStudentName =  async (parent:any, args:any) => {
 export{
     registerNewStudent,
     signinStudentWithName,
-    changeNameOfStudentWithName,
+    changePasswordOfStudentWithName,
     deleteStudentWithName,
+    findStudentWithName,
     enrollStudentIntoClass,
     getAllStudentName
 }

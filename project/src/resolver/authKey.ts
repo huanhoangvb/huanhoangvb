@@ -1,0 +1,1 @@
+export const secret = "Super_duper_secret_jwt_key"
