@@ -1,4 +1,3 @@
-import { where } from "sequelize/types"
 import Enrolment from "../models/enrolment"
 import Student from "../models/student"
 import {comparePassword,createToken} from "../models/student"
@@ -8,19 +7,21 @@ const registerNewStudent = async (parent: any, args: any) => {
     await newStudent.save() 
     console.log('Student '+newStudent.name +' has been successfully registered with id '+ newStudent.id);
     
-    const accessToken = createToken(newStudent)   
-    return {
+    const accessToken = await createToken(newStudent)   
+    return {        
         id: newStudent.id,
         name: newStudent.name,
-        //accessToken: accessToken,
+        accessToken: accessToken,
     }
+
+    
 }
 
 const signinStudentWithName = async (parent: any, args: any) => {
     const {name , password} = args
     const foundStudent = await Student.findOne({where: {name: name, password: password}})
     
-    if(foundStudent == null){
+    if(!foundStudent){
         return console.log("Username is incorrect, please try again")
     }
     const passwordAuth = await comparePassword(password, foundStudent)
@@ -43,8 +44,12 @@ const findStudentWithName = async (parent: any, args: any) => {
         return console.log("That student doenst exists")
     }
     
-    return console.log("The student you search is "+foundStudent.name+" with id "+ foundStudent.id)
-
+    console.log("The student you search is "+foundStudent.name+" with id "+ foundStudent.id)
+    return {
+        name: foundStudent.name,
+        id: foundStudent.id,
+        password: foundStudent.password,
+    }
 }
 
 const enrollStudentIntoClass = async (parent: any, args: any) => {
@@ -62,14 +67,18 @@ const enrollStudentIntoClass = async (parent: any, args: any) => {
     })
 
     enrolment.save()
-        return console.log("Student with id "+ studentId+ " has successfully enrolled in class "+ classId)
+    console.log("Student with id "+ studentId+ " has successfully enrolled in class "+ classId)
+    return {
+        student_id: studentId,
+        class_id: classId,
+    }
 }
 
 const changePasswordOfStudentWithName = async (parent: any, args: any) => {
     const {name, currentPassword, newPassword} = args
-    const foundStudent = await Student.findOne({where: {name: name}})
+    const foundStudent = await Student.findOne({where: {name: name, password: currentPassword}})
 
-    if (foundStudent == null)
+    if (!foundStudent)
         return console.log("The name of the student "+ name+ " doesnt exist, please try again")
     const passwordAuth = await comparePassword(currentPassword, foundStudent)
     if(!passwordAuth)
@@ -82,6 +91,7 @@ const changePasswordOfStudentWithName = async (parent: any, args: any) => {
     return {
         id: foundStudent.id,
         name: foundStudent.name,
+        password: foundStudent.password,
     }
 }
 
@@ -91,12 +101,12 @@ const deleteStudentWithName = async (parent: any, args: any) => {
     if (!studentToBeDeleted)
         return console.log('The student you search doesnt exist, please try again!')
     console.log('You have successfully deleted student '+name+' with id ')
-    return studentToBeDeleted
+    return name
 }
 
 const getAllStudentName =  async () => {
     try { 
-        const studentFound = await Student.findAll()
+        const studentFound = await Student.findAll({})
         console.log(studentFound)
         return studentFound
     } catch (err:any) {

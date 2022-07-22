@@ -38,8 +38,8 @@ type Mutation {
 
 const resolvers = {
   Query: {
-    classes: () => getAllClassName,
-    students: () => getAllStudentName,
+    classes: getAllClassName,
+    students: getAllStudentName,
   },
   Mutation:{
     createNewStudent: registerNewStudent,

@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize-typescript'
 import Student from './models/student'
-import Class from './models/class'
+import Class from './models/class' 
 
 const user = 'postgres'
 const host = 'localhost'

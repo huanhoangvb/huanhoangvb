@@ -2,11 +2,12 @@
 import Class from "../models/class"
 
 const registerNewClass = async (parent: any, args: any) => {
-    const className = args
-    const newClass = await Class.create({name: className})
+    // const className = args
+    console.log(args)
+    const newClass = await Class.create({name: args})
     await newClass.save() 
-    console.log('Class '+className +' has been successfully registered');
-
+    console.log('Class '+args.name +' has been successfully registered');
+    return newClass
 }
 
 const searchClassWithName = async (parent: any, args: any) => {
@@ -42,6 +43,7 @@ const deleteClassWithName = async (parent: any, args: any) => {
     else{
         console.log('You have successfully deleted class name '+name)
     }
+
 }
 
 const getAllClassName =  async (parent:any, args:any) => {
