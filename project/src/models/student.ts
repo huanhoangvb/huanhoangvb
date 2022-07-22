@@ -1,6 +1,7 @@
 import { Table, Column, Model, HasMany, Sequelize, AllowNull, PrimaryKey, NotEmpty } from 'sequelize-typescript'
 import { DataType } from 'sequelize-typescript';
 import {sign, verify} from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import {secret} from '../resolver/authKey';
 
 @Table({tableName: 'Student', freezeTableName: true})
@@ -24,6 +25,12 @@ export class Student extends Model{
 
 }
 
+const hashPassword = async (student: Student) =>{
+  console.log('object');
+  const salt = await bcrypt.genSalt(10)
+  student.password = await bcrypt.hash(student.password, salt)   
+}
+
 const createToken = async (student: Student) => {
   return sign({
     studentId: student.id,
@@ -37,8 +44,9 @@ const createToken = async (student: Student) => {
   })
 };
 
-const comparePassword = (password: string, student: Student) =>{
-  return password === student.password
+const comparePassword = async (password: string, student: Student) =>{
+  const comparePassword = await bcrypt.compare(password, student.password)
+  return comparePassword
 }
 
 export default Student;

@@ -3,18 +3,16 @@ import Student from "../models/student"
 import {comparePassword,createToken} from "../models/student"
 
 const registerNewStudent = async (parent: any, args: any) => {
-    const newStudent = await Student.create({name: args.name, password: args.password})
+    const {name, password} = args
+    const newStudent = await Student.create({name: name, password: password})
     await newStudent.save() 
     console.log('Student '+newStudent.name +' has been successfully registered with id '+ newStudent.id);
     
-    const accessToken = await createToken(newStudent)   
+    const accessToken = createToken(newStudent)   
     return {        
-        id: newStudent.id,
-        name: newStudent.name,
+        newStudent,
         accessToken: accessToken,
     }
-
-    
 }
 
 const signinStudentWithName = async (parent: any, args: any) => {
@@ -48,59 +46,53 @@ const findStudentWithName = async (parent: any, args: any) => {
     return {
         name: foundStudent.name,
         id: foundStudent.id,
-        password: foundStudent.password,
     }
 }
 
 const enrollStudentIntoClass = async (parent: any, args: any) => {
-    const {studentId, classId} = args
+    const studentId = args.student 
+    const classId = args.class 
 
+    console.log("student id "+studentId+" class id "+classId)
     if(!classId)
         return console.log("Please provide class id!")
     
     if(!studentId)
         return console.log("Please provide student id!")
 
-    const enrolment = await Enrolment.create({
+    await Enrolment.create({
         student_id: studentId,
         class_id: classId
     })
 
-    enrolment.save()
     console.log("Student with id "+ studentId+ " has successfully enrolled in class "+ classId)
-    return {
-        student_id: studentId,
-        class_id: classId,
-    }
+    return [studentId,classId]
 }
 
 const changePasswordOfStudentWithName = async (parent: any, args: any) => {
-    const {name, currentPassword, newPassword} = args
-    const foundStudent = await Student.findOne({where: {name: name, password: currentPassword}})
+    const {name, oldPassword, newPassword} = args
+    const foundStudent = await Student.findOne({where: {name: name, password: oldPassword}})
 
     if (!foundStudent)
         return console.log("The name of the student "+ name+ " doesnt exist, please try again")
-    const passwordAuth = await comparePassword(currentPassword, foundStudent)
+    const passwordAuth = await comparePassword(oldPassword, foundStudent)
     if(!passwordAuth)
         return console.log("The password is wrong, please try again")
 
     console.log('You are now changing student '+foundStudent.name+' with id '+ foundStudent.id +' password!')
 
-    foundStudent.update({password: newPassword})
+    await foundStudent.update({password: newPassword})
 
-    return {
-        id: foundStudent.id,
-        name: foundStudent.name,
-        password: foundStudent.password,
-    }
+    return foundStudent
 }
 
 const deleteStudentWithName = async (parent: any, args: any) => {
-    const name = args
+    const name = args.name
     const studentToBeDeleted = await Student.destroy({ where: { name: name}})
+    console.log("Student Row +"+studentToBeDeleted)
     if (!studentToBeDeleted)
         return console.log('The student you search doesnt exist, please try again!')
-    console.log('You have successfully deleted student '+name+' with id ')
+    console.log('You have successfully deleted student '+name)
     return name
 }
 

@@ -24,13 +24,13 @@ type Mutation {
   createNewStudent(name:String!, password:String!): Student
   loginStudent(name:String!, password:String!): Student
   changePassword(name:String!, oldPassword:String!, newPassword:String!): Student
-  deleteStudent(name:String!): Student
-  enrollStudent(name:String!, class:String!): Student
+  deleteStudent(name:String!): String
+  enrollStudent(student:String!, class:String!): [Int]
 
   createNewClass(name:String): Class
   searchClass(name:String): Class
-  changeClassName(name:String, newName:String): Class
-  deleteClass(name:String): Class
+  changeClassName(name:String, newName:String): String
+  deleteClass(name:String): String
 
   findStudent(name:String): Student
 }
