@@ -18,7 +18,6 @@ async function main() {
     console.log('Unable to connect to the database:', err);
   });
 }
-// 4
 main()
   // 5
   .finally(async () => {
