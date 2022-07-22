@@ -8,7 +8,7 @@ const registerNewStudent = async (parent: any, args: any) => {
     await newStudent.save() 
     console.log('Student '+newStudent.name +' has been successfully registered with id '+ newStudent.id);
     
-    const accessToken = createToken(newStudent)   
+    const accessToken = await createToken(newStudent)   
     return {        
         newStudent,
         accessToken: accessToken,
@@ -26,7 +26,7 @@ const signinStudentWithName = async (parent: any, args: any) => {
     if (!passwordAuth)
         return console.log("Wrong password, please try again")
 
-    const accessToken = createToken(foundStudent)
+    const accessToken = await createToken(foundStudent)
     return {
         id :foundStudent.id,
         name: foundStudent.name,
