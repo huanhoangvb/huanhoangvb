@@ -1,5 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { registerNewStudent, getAllStudentName,signinStudentWithName, changeNameOfStudentWithName, deleteStudentWithName, enrollStudentIntoClass} from './resolver/studentService'
+import { registerNewStudent, getAllStudentName,signinStudentWithName, changePasswordOfStudentWithName, deleteStudentWithName, enrollStudentIntoClass, findStudentWithName} from './resolver/studentService'
 import { registerNewClass, getAllClassName, searchClassWithName, changeNameOfClassWithName, deleteClassWithName } from './resolver/classService'
 
 const typeDefinitions = /* GraphQL */ `
@@ -10,7 +10,7 @@ type Query {
 type Mutation {
   registerNewStudent(name:String): Student
   signinStudentWithName(name:String): Student
-  changeNameOfStudentWithName(name:String, newName:String): Student
+  changePasswordOfStudentWithName(name:String, oldPassword:String, newPassword:String): Student
   deleteStudentWithName(name:String): Student
   enrollStudentIntoClass(name:String, class:String): Student
 
@@ -28,6 +28,7 @@ type Class{
 type Student{
   id: String
   name: String
+  password: String
 }
 `
 
@@ -39,13 +40,14 @@ const resolvers = {
   Mutation:{
     createNewStudent: registerNewStudent,
     loginStudent: signinStudentWithName,
-    changeStudentWithName: changeNameOfStudentWithName,
+    changePassword: changePasswordOfStudentWithName,
     deleteStudent: deleteStudentWithName,
     createNewClass: registerNewClass,
-    searchClas: searchClassWithName,
+    searchClass: searchClassWithName,
     changeClassName: changeNameOfClassWithName,
     deleteClass: deleteClassWithName,
     enrollClass: enrollStudentIntoClass,
+    findStudent: findStudentWithName,
   },
 }
 

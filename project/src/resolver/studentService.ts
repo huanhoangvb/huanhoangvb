@@ -3,7 +3,8 @@ import Student from "../models/student"
 import {comparePassword,createToken} from "../models/student"
 
 const registerNewStudent = async (parent: any, args: any) => {
-    const newStudent = await Student.create({name: args.name})
+    const name = args
+    const newStudent = await Student.create({name: name})
     await newStudent.save() 
     console.log('Student '+newStudent.name +' has been successfully registered with id '+ newStudent.id);
     
@@ -17,7 +18,7 @@ const registerNewStudent = async (parent: any, args: any) => {
 
 const signinStudentWithName = async (parent: any, args: any) => {
     const {name , password} = args
-    const foundStudent = await Student.findOne({where: {name,password}})
+    const foundStudent = await Student.findOne({where: {name: name, password: password}})
     
     if(foundStudent == null){
         return console.log("Username is incorrect, please try again")

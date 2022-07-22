@@ -39,9 +39,8 @@ const createToken = (student: Student) => {
 };
 
 const comparePassword = (password: string, student: Student) =>{
-  console.log('Compare password func');
-  const isEqual = bcrypt.compare(password, student.password)
-  return isEqual
+  const validatePassword = bcrypt.compare(password, student.password)
+  return validatePassword
 }
 
 export default Student;
