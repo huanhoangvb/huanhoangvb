@@ -1,10 +1,10 @@
+import { where } from "sequelize/types"
 import Enrolment from "../models/enrolment"
 import Student from "../models/student"
 import {comparePassword,createToken} from "../models/student"
 
 const registerNewStudent = async (parent: any, args: any) => {
-    const name = args
-    const newStudent = await Student.create({name: name})
+    const newStudent = await Student.create({name: args.name, password: args.password})
     await newStudent.save() 
     console.log('Student '+newStudent.name +' has been successfully registered with id '+ newStudent.id);
     
@@ -12,7 +12,7 @@ const registerNewStudent = async (parent: any, args: any) => {
     return {
         id: newStudent.id,
         name: newStudent.name,
-        accessToken,
+        //accessToken: accessToken,
     }
 }
 
@@ -94,9 +94,10 @@ const deleteStudentWithName = async (parent: any, args: any) => {
     return studentToBeDeleted
 }
 
-const getAllStudentName =  async (parent:any, args:any) => {
+const getAllStudentName =  async () => {
     try { 
         const studentFound = await Student.findAll()
+        console.log(studentFound)
         return studentFound
     } catch (err:any) {
         console.log(err);

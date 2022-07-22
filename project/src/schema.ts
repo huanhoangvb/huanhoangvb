@@ -3,23 +3,6 @@ import { registerNewStudent, getAllStudentName,signinStudentWithName, changePass
 import { registerNewClass, getAllClassName, searchClassWithName, changeNameOfClassWithName, deleteClassWithName } from './resolver/classService'
 
 const typeDefinitions = /* GraphQL */ `
-type Query {
-
-}
-
-type Mutation {
-  registerNewStudent(name:String): Student
-  signinStudentWithName(name:String): Student
-  changePasswordOfStudentWithName(name:String, oldPassword:String, newPassword:String): Student
-  deleteStudentWithName(name:String): Student
-  enrollStudentIntoClass(name:String, class:String): Student
-
-  registerNewClass(name:String): Class
-  searchClassWithName(name:String): Class
-  changeNameOfClassWithName(name:String, newName:String): Class
-  deleteClassWithName(name:String): Class
-}
-
 type Class{
   id: String
   name: String
@@ -29,12 +12,33 @@ type Student{
   id: String
   name: String
   password: String
+  accessToken: String
+}
+
+type Query {
+  classes: [Class]
+  students: [Student]
+}
+
+type Mutation {
+  createNewStudent(name:String!, password:String!): Student
+  loginStudent(name:String!, password:String!): Student
+  changePassword(name:String!, oldPassword:String!, newPassword:String!): Student
+  deleteStudent(name:String!): Student
+  enrollStudent(name:String!, class:String!): Student
+
+  createNewClass(name:String): Class
+  searchClass(name:String): Class
+  changeClassName(name:String, newName:String): Class
+  deleteClass(name:String): Class
+
+  findStudent(name:String): Student
 }
 `
 
 const resolvers = {
   Query: {
-    class: () => getAllClassName,
+    classes: () => getAllClassName,
     students: () => getAllStudentName,
   },
   Mutation:{
@@ -46,12 +50,12 @@ const resolvers = {
     searchClass: searchClassWithName,
     changeClassName: changeNameOfClassWithName,
     deleteClass: deleteClassWithName,
-    enrollClass: enrollStudentIntoClass,
+    enrollStudent: enrollStudentIntoClass,
     findStudent: findStudentWithName,
   },
 }
 
 export const schema = makeExecutableSchema({
-  resolvers: [resolvers],
-  typeDefs: [typeDefinitions],
+  resolvers: resolvers,
+  typeDefs: typeDefinitions,
 })
