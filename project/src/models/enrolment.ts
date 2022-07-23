@@ -5,17 +5,19 @@ import Student from './student';
 
 @Table({tableName: 'Enrolment', freezeTableName: true})
 export class Enrolment extends Model{
+  @AllowNull(false)
   @ForeignKey(() => Class)
   @Column({
     type: DataType.UUID,
-    defaultValue: DataType.UUIDV4,
   })
-  class_id?: string
+  class_id: string
 
+  @AllowNull(false)
   @ForeignKey(() => Student)
-  @Column({type: DataType.UUID,
-    defaultValue: DataType.UUIDV4})
-  student_id!:  string
+  @Column({
+    type: DataType.UUID,
+  })
+  student_id:  string
 }
 
 export default Enrolment;
