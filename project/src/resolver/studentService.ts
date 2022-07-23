@@ -1,3 +1,4 @@
+import { GraphQLYogaError } from "@graphql-yoga/node"
 import Enrolment from "../models/enrolment"
 import Student from "../models/student"
 import {comparePassword,createToken} from "../models/student"
@@ -50,23 +51,31 @@ const findStudentWithName = async (parent: any, args: any) => {
 }
 
 const enrollStudentIntoClass = async (parent: any, args: any) => {
-    const studentId = args.student 
-    const classId = args.class 
-
-    console.log("student id "+studentId+" class id "+classId)
-    if(!classId)
-        return console.log("Please provide class id!")
+    try{
+        const studentId = args.student 
+        const classId = args.class 
     
-    if(!studentId)
-        return console.log("Please provide student id!")
-
-    await Enrolment.create({
-        student_id: studentId,
-        class_id: classId
-    })
-
-    console.log("Student with id "+ studentId+ " has successfully enrolled in class "+ classId)
-    return [studentId,classId]
+        console.log("student id "+studentId+" class id "+classId)
+        if(!classId)
+            return console.log("Please provide class id!")
+        console.log("Between")
+        if(!studentId)
+            return console.log("Please provide student id!")
+        console.log("After")
+        await Enrolment.create({
+            student_id: studentId,
+            class_id: classId
+        })
+    
+        console.log("Student with id "+ studentId+ " has successfully enrolled in class "+ classId)
+        return [studentId,classId]
+    }
+    catch(err:any){
+        console.log("The Error is "+err);
+        return new GraphQLYogaError(err.message)
+    }
+    
+    
 }
 
 const changePasswordOfStudentWithName = async (parent: any, args: any) => {
