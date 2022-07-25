@@ -22,30 +22,28 @@ export class Student extends Model{
   @NotEmpty
   @Column({type: DataType.TEXT, allowNull: false})
   password!:  string
-
+  
 }
 
 const hashPassword = async (student: Student) =>{
   console.log('object');
   const salt = await bcrypt.genSalt(10)
-  student.password = await bcrypt.hash(student.password, salt)   
+  return await bcrypt.hash(student.password, salt)   
 }
 
 const createToken = async (student: Student) => {
   return sign({
     studentId: student.id,
     name: student.name,
-    password: student.password,
   },
   secret,
   {
-    algorithm: 'RS256',
     expiresIn: 360,
   })
 };
 
 const comparePassword = async (password: string, student: Student) =>{
-  const comparePassword = await bcrypt.compare(password, student.password)
+  const comparePassword = await bcrypt.compare(password, await hashPassword(student))
   return comparePassword
 }
 
