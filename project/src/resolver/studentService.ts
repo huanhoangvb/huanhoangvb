@@ -4,16 +4,22 @@ import Student from "../models/student"
 import {comparePassword,createToken} from "../models/student"
 
 const registerNewStudent = async (parent: any, args: any) => {
-    const {name, password} = args
-    const newStudent = await Student.create({name: name, password: password})
-    await newStudent.save() 
-    console.log('Student '+newStudent.name +' has been successfully registered with id '+ newStudent.id);
-    
-    const accessToken = await createToken(newStudent)   
-    return {        
-        newStudent,
-        accessToken: accessToken,
+    try{
+        const {name, password} = args
+        const newStudent = await Student.create({name: name, password: password})    
+        await newStudent.save() 
+        console.log('Student '+newStudent.name +' has been successfully registered with id '+ newStudent.id);
+        const accessToken = await createToken(newStudent)  
+        
+        console.log(accessToken) 
+        return {        
+            id: newStudent.id,
+            name: newStudent.name,
+            accessToken: accessToken,}
+    }catch(err:any) {
+        console.log(err)
     }
+
 }
 
 const signinStudentWithName = async (parent: any, args: any) => {

@@ -7,6 +7,7 @@ import Student from './student';
 export class Enrolment extends Model{
   @AllowNull(false)
   @ForeignKey(() => Class)
+  @PrimaryKey
   @Column({
     type: DataType.UUID,
   })
@@ -14,6 +15,7 @@ export class Enrolment extends Model{
 
   @AllowNull(false)
   @ForeignKey(() => Student)
+  @PrimaryKey
   @Column({
     type: DataType.UUID,
   })
