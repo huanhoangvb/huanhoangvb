@@ -1,12 +1,10 @@
 FROM node:latest
 WORKDIR /app
-COPY package*.json /app/
+COPY package.json /app/
 COPY src /app/src
 
-RUN npm install && npm install ts-node typescript -g
-RUN npm gerenerate
-RUN npm build && npm start 
+RUN npm install && npm install ts-node typescript -g && npm install bcrypt
 COPY . .
 
 EXPOSE 3000
-CMD ["npm", "run", "start", "dev"]
+CMD ["npm", "start"]
