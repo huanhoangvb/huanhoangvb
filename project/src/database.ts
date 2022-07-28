@@ -4,7 +4,7 @@ import Class from './models/class'
 import Enrolment from "./models/enrolment"
 
 const user = 'postgres'
-const host = 'localhost'
+const host = 'postgres'
 const database = 'maindb'
 const password = '1242001Huan'
 const port = 5432
@@ -15,6 +15,7 @@ export const sequelize = new Sequelize(database, user, password, {
   port: port,
   storage: ':memory:',
   models: [Student,Class,Enrolment]
+
 });
 
 export default sequelize;

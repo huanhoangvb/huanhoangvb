@@ -4,9 +4,11 @@ services:
     image: postgres:12
     restart: always
     volumes:
-    - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: 1242001Huan
+      - POSTGRES_USER:postgres
+      - POSTGRES_PASSWORD:1242001Huan
+      - POSTGRES_DB:maindb
   graphql-engine:
     image: hasura/graphql-engine:v2.9.0
     ports:
@@ -26,6 +28,23 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       ## uncomment next line to set an admin secret
       # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+  student-management:
+    build: .
+    ports: 
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - db
+      - graphql-engine
+    volumes:
+      - ./:/app #sync app directory in container with local
+      - /app/node_modules
+    environment:
+      - user = postgres
+      - host = postgres
+      - database = maindb
+      - password = 1242001Huan
+
 volumes:
   db_data:
 
