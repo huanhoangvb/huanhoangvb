@@ -9,7 +9,7 @@ const database = 'maindb'
 const password = '1242001Huan'
 const port = 5432
 
-console.log(process.env)
+
 export const sequelize = new Sequelize(database, user, password, {
   host: host,
   dialect: 'postgres',
@@ -19,5 +19,4 @@ export const sequelize = new Sequelize(database, user, password, {
 
 });
 
-console.log(process.env.DB_PORT)
 export default sequelize;

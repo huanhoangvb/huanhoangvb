@@ -15,6 +15,7 @@ services:
       - "8080:8080"
     depends_on:
       - "postgres"
+      - "student-management"
     restart: always
     environment:
       ## postgres database to store Hasura metadata
@@ -28,27 +29,27 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       ## uncomment next line to set an admin secret
       # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
-    env_file:
-      - NODE_ENV = development
-      - DB_HOST = postgres
-      - DB_USER = postgres
-      - DB_NAME = maindb
-      - DB_PASSWORD = 1242001Huan
+      NODE_ENV : development
+      DB_HOST : postgres
+      DB_USER : postgres
+      DB_NAME : maindb
+      DB_PASSWORD : 1242001Huan
+      REMOTE_SCHEMA_ENDPOINT : http://student-management:4000/graphql
   student-management:
-    build: .
+    build: 
+      context: .
     ports: 
-      - "3000:3000"
+      - "4000:4000"
     restart: always
-    depends_on:
-      - postgres
-      - graphql-engine
     volumes:
       - ./:/app 
+      - /app/node_modules
     environment:
-      - user = 'postgres'
-      - host = 'postgres'
-      - database = 'maindb'
-      - password = '1242001Huan'
+      NODE_ENV : development
+      DB_HOST : postgres
+      DB_USER : postgres
+      DB_NAME : maindb
+      DB_PASSWORD : 1242001Huan
 
 volumes:
   db_data:
