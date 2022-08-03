@@ -34,7 +34,7 @@ services:
       DB_USER : postgres
       DB_NAME : maindb
       DB_PASSWORD : 1242001Huan
-      REMOTE_SCHEMA_ENDPOINT : http://student-management:4000/graphql
+      REMOTE_SCHEMA_ENDPOINT : http://project-student-management-1:4000/graphql
   student-management:
     build: 
       context: .
