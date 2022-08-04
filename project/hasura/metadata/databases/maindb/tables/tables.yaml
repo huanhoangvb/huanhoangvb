@@ -1,0 +1,3 @@
+- "!include public_class.yaml"
+- "!include public_enrolment.yaml"
+- "!include public_student.yaml"

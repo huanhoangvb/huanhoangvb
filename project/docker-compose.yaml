@@ -4,13 +4,13 @@ services:
     image: postgres:12
     restart: always
     ports:
-      - "5432:5432"
+      - "5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=1242001Huan
-      - POSTGRES_DB=maindb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1242001Huan
+      POSTGRES_DB: maindb
   graphql-engine:
     image: hasura/graphql-engine:v2.9.0
     ports:
@@ -20,7 +20,7 @@ services:
     restart: always
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:1242001Huan@postgres:5432/maindb
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "false" # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       NODE_ENV : development
@@ -28,7 +28,7 @@ services:
       DB_USER: postgres
       DB_NAME: maindb
       DB_PASSWORD: 1242001Huan
-      REMOTE_SCHEMA_ENDPOINT: http://project-student-management-1:4000/graphql
+      REMOTE_SCHEMA_ENDPOINT: http://student-management:4000/graphql
   student-management:
     build: 
       context: .
