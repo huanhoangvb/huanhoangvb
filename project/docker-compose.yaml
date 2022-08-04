@@ -8,9 +8,9 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER:postgres
-      - POSTGRES_PASSWORD:1242001Huan
-      - POSTGRES_DB:maindb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1242001Huan
+      - POSTGRES_DB=maindb
   graphql-engine:
     image: hasura/graphql-engine:v2.9.0
     ports:
