@@ -3,6 +3,8 @@ services:
   postgres:
     image: postgres:12
     restart: always
+    ports:
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
@@ -15,41 +17,35 @@ services:
       - "8080:8080"
     depends_on:
       - "postgres"
-      - "student-management"
     restart: always
     environment:
-      ## postgres database to store Hasura metadata
-      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:1242001Huan@postgres:5432/maindb
-      ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
-      PG_DATABASE_URL: postgres://postgres:1242001Huan@postgres:5432/maindb
-      ## enable the console served by server
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:1242001Huan@postgres:5432/maindb
       HASURA_GRAPHQL_ENABLE_CONSOLE: "false" # set to "false" to disable console
-      ## enable debugging mode. It is recommended to disable this in production
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-      ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
       NODE_ENV : development
-      DB_HOST : postgres
-      DB_USER : postgres
-      DB_NAME : maindb
-      DB_PASSWORD : 1242001Huan
-      REMOTE_SCHEMA_ENDPOINT : http://project-student-management-1:4000/graphql
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_NAME: maindb
+      DB_PASSWORD: 1242001Huan
+      REMOTE_SCHEMA_ENDPOINT: http://project-student-management-1:4000/graphql
   student-management:
     build: 
       context: .
     ports: 
       - "4000:4000"
     restart: always
+    depends_on:
+      - postgres
     volumes:
       - ./:/app 
       - /app/node_modules
     environment:
       NODE_ENV : development
-      DB_HOST : postgres
-      DB_USER : postgres
-      DB_NAME : maindb
-      DB_PASSWORD : 1242001Huan
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_NAME: maindb
+      DB_PASSWORD: 1242001Huan
 
 volumes:
   db_data:
